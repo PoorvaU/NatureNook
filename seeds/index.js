@@ -22,8 +22,8 @@ const seedDB = async()=>{
     // await c.save();
 
     for (let i = 0; i < 300; i++) {
-        const random1000 = Math.floor(Math.random() * 1000);
-        const price = Math.floor(Math.random() * 20) + 10;
+        const random1000 = Math.floor(Math.random() * 37);
+        const price = Math.floor(Math.random() * 30) + 1;
         const camp = new Campground({
             author:'66923e90d278cdc168297c66',
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
@@ -34,8 +34,8 @@ const seedDB = async()=>{
             geometry: {
               type: "Point",
               coordinates: [
-                  cities[random1000].longitude,
-                  cities[random1000].latitude,
+                  cities[random1000].lng,
+                  cities[random1000].lat,
               ]
             },
             images: [
