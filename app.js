@@ -1,6 +1,7 @@
 if(process.env.NODE_ENV!=="production"){
     require('dotenv').config();
 }
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -17,9 +18,17 @@ const helmet = require('helmet')
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds.js') 
 const reviewRoutes = require('./routes/reviews')
+const MongoStore = require('connect-mongo');
+const dbUrl = 'mongodb://0.0.0.0:27017/yelp-camp'
 
-
-mongoose.connect('mongodb://0.0.0.0:27017/yelp-camp', {
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: process.env.SESSION_SECRET
+    }
+});
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     
@@ -44,8 +53,9 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(mongoSanitize())
 
 const sessionConfig = {
+    store,
     name:'session',
-    secret: 'thisshouldbeabettersecret!',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
